@@ -25,11 +25,19 @@ def findObjectContours(dilate, objName):
     # Find boundary of object
     dilcopy = dilate.copy()
     contours, hierarchy = cv2.findContours(dilate, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    con = contours[0]
+    x, y , w, h = cv2.boundingRect(con)
+    center = (int(x+(w/2)), int(y+(h/2)))
+    #moments = cv2.moments(con)
+    #print(moments)
     print(len(contours))
-    print(contours)
+    #print(contours)
     contoured_image = cv2.drawContours(dilcopy, contours, -1, (100,0,0), 2)
+    contoured_image = cv2.rectangle(contoured_image, (x,y), (x+w, y+h), (100, 0, 0), 2)
+    contoured_image = cv2.circle(contoured_image, center, 3, (100, 0, 0), 2)
     cv2.imshow("contours", contoured_image)
-    cv2.waitKey(10000) #Waits long enough for image to load
+    cv2.waitKey(0) #Waits long enough for image to load
+
     # # Only proceed if contours were found
     # if(contours != None):
     #     if(len(contours) > 1):
@@ -63,7 +71,8 @@ if __name__ == "__main__":
     # # Find the cube
     #img_hsv_lower = np.array([70, 170, 30])
     #img_hsv_upper = np.array([90, 200, 50])
-    color = np.array([110,91,80])
+    color = whiteboard_color = np.array([110,91,80])
+    #color = green_color = np.array([34, 177, 76])
     bound = 40
     img_hsv_lower = np.array(color - bound)
     img_hsv_upper = np.array(color + bound)
